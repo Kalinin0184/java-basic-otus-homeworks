@@ -7,6 +7,7 @@ public class Homework3 {
         greetings();
         checkSign(3, 4, 5);
         selectColor();
+        compareNumbers();
     }
 
     public static void greetings() {
@@ -33,6 +34,17 @@ public class Homework3 {
             System.out.println("Желтый");
         } else {
             System.out.println("Зеленый");
+        }
+    }
+
+    public static void compareNumbers() {
+        int a = (int) (Math.random() * (100 - 0 + 1));
+        int b = (int) (Math.random() * (100 - 0 + 1));
+        if (a >= b) {
+            System.out.println("a >= b");
+        }
+        else {
+            System.out.println("a < b");
         }
     }
 }
