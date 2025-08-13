@@ -8,6 +8,7 @@ public class Homework3 {
         checkSign(3, 4, 5);
         selectColor();
         compareNumbers();
+        addOrSubtractAndPrint(10, 5, false);
     }
 
     public static void greetings() {
@@ -42,9 +43,18 @@ public class Homework3 {
         int b = (int) (Math.random() * (100 - 0 + 1));
         if (a >= b) {
             System.out.println("a >= b");
-        }
-        else {
+        } else {
             System.out.println("a < b");
+        }
+    }
+
+    public static void addOrSubtractAndPrint(int initValue, int delta, boolean increment) {
+        if (increment == true) {
+            initValue += delta;
+            System.out.println(initValue);
+        } else {
+            initValue -= delta;
+            System.out.println(initValue);
         }
     }
 }
