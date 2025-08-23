@@ -1,5 +1,6 @@
 package ru.otus.java.basic.homeworks;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class Application {
@@ -16,6 +17,8 @@ public class Application {
         int[] summationArraysSecond = {2, 2};
         int[] summationArraysThird = {1, 1, 1, 1, 1};
         summationArrays(summationArraysFirst, summationArraysSecond, summationArraysThird);
+        int[] revArr = {9, 8, 7, 6, 5, 4, 3, 2, 1};
+        reverseArray(revArr);
     }
 
     public static void printLine(int numberPrinting, String strPrint) {
@@ -83,5 +86,14 @@ public class Application {
             }
         }
         System.out.println(Arrays.toString(resultArray));
+    }
+
+    public static void reverseArray(int[] arrRev)
+    {
+        int[] reverse = new int[arrRev.length];
+        for (int i = 0; i < arrRev.length; i++) {
+            reverse[i] = arrRev[arrRev.length - 1 - i];
+        }
+        System.out.println(Arrays.toString(reverse));
     }
 }
