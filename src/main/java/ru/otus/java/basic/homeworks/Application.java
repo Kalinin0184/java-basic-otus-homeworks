@@ -9,6 +9,8 @@ public class Application {
         sumArr(new int[] {3,4,5,6,7,8,9});
         int[] arrayFill = new int[10];
         fillArr(4, arrayFill);
+        int[] arrayIncrease = {5,1,34,67,24,5625,11};
+        increaseArr(3, arrayIncrease);
     }
 
     public static void printLine(int numberPrinting, String strPrint)
@@ -21,10 +23,9 @@ public class Application {
     public static void sumArr(int[] array)
     {
         int sumA = 0;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] > 5)
-            {
-                sumA += array[i];
+        for (int j : array) {
+            if (j > 5) {
+                sumA += j;
             }
         }
         System.out.println(sumA);
@@ -34,5 +35,13 @@ public class Application {
     {
         Arrays.fill(arrayFill, variableNumber);
         System.out.println(Arrays.toString(arrayFill));
+    }
+
+    public static void increaseArr(int incNumber, int[] arrayIncrease)
+    {
+        for (int i = 0; i < arrayIncrease.length; i++) {
+            arrayIncrease[i] += incNumber;
+        }
+        System.out.println(Arrays.toString(arrayIncrease));
     }
 }
