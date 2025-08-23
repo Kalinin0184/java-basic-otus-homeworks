@@ -6,23 +6,25 @@ public class Application {
     public static void main(String[] args) {
         System.out.println("Hello world");
         printLine(6, "Привет мир!");
-        sumArr(new int[] {3,4,5,6,7,8,9});
+        sumArr(new int[]{3, 4, 5, 6, 7, 8, 9});
         int[] arrayFill = new int[10];
         fillArr(4, arrayFill);
-        int[] arrayIncrease = {5,1,34,67,24,5625,11};
+        int[] arrayIncrease = {5, 1, 34, 67, 24, 5625, 11};
         increaseArr(3, arrayIncrease);
-        weighingArr(new int[] {10, 15, 20, 25, 30, 35, 40, 45});
+        weighingArr(new int[]{10, 15, 20, 25, 30, 35, 40, 45});
+        int[] summationArraysFirst = {1, 2, 3};
+        int[] summationArraysSecond = {2, 2};
+        int[] summationArraysThird = {1, 1, 1, 1, 1};
+        summationArrays(summationArraysFirst, summationArraysSecond, summationArraysThird);
     }
 
-    public static void printLine(int numberPrinting, String strPrint)
-    {
+    public static void printLine(int numberPrinting, String strPrint) {
         for (int i = 0; i < numberPrinting; i++) {
             System.out.println(strPrint);
         }
     }
 
-    public static void sumArr(int[] array)
-    {
+    public static void sumArr(int[] array) {
         int sumA = 0;
         for (int j : array) {
             if (j > 5) {
@@ -32,40 +34,54 @@ public class Application {
         System.out.println(sumA);
     }
 
-    public static void fillArr(int variableNumber, int[] arrayFill)
-    {
+    public static void fillArr(int variableNumber, int[] arrayFill) {
         Arrays.fill(arrayFill, variableNumber);
         System.out.println(Arrays.toString(arrayFill));
     }
 
-    public static void increaseArr(int incNumber, int[] arrayIncrease)
-    {
+    public static void increaseArr(int incNumber, int[] arrayIncrease) {
         for (int i = 0; i < arrayIncrease.length; i++) {
             arrayIncrease[i] += incNumber;
         }
         System.out.println(Arrays.toString(arrayIncrease));
     }
 
-    public static void weighingArr(int[] arrWeighing)
-    {
+    public static void weighingArr(int[] arrWeighing) {
         int sumA = 0, sumB = 0;
         int variableHalfNumber = arrWeighing.length / 2;
         for (int i = 0; i < arrWeighing.length; i++) {
-            if (i < variableHalfNumber)
-            {
+            if (i < variableHalfNumber) {
                 sumA += arrWeighing[i];
-            }
-            else {
+            } else {
                 sumB += arrWeighing[i];
             }
         }
-        if (sumA > sumB)
-        {
+        if (sumA > sumB) {
             System.out.println("Первая половина массива больше!");
-        }
-        else {
+        } else {
             System.out.println("Вторая половина массива больше!");
         }
 
+    }
+
+    public static void summationArrays(int[] summationArraysFirst, int[] summationArraysSecond, int[] summationArraysThird) {
+        int a = summationArraysFirst.length;
+        int b = summationArraysSecond.length;
+        int c = summationArraysThird.length;
+        int d = Math.max(a,b);
+        int e = Math.max(c,d);
+        int[] resultArray = new int[e];
+        for (int i = 0; i < e; i++) {
+            if(i < a){
+                resultArray[i] += summationArraysFirst[i];
+            }
+            if(i < b){
+                resultArray[i] += summationArraysSecond[i];
+            }
+            if(i < c){
+                resultArray[i] += summationArraysThird[i];
+            }
+        }
+        System.out.println(Arrays.toString(resultArray));
     }
 }
