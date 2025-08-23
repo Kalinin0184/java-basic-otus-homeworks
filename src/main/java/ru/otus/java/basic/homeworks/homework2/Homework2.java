@@ -1,9 +1,9 @@
-package ru.otus.java.basic.homeworks;
+package ru.otus.java.basic.homeworks.homework2;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Scanner;
 
-public class Application {
+public class Homework2 {
     public static void main(String[] args) {
         System.out.println("Hello world");
         printLine(6, "Привет мир!");
@@ -19,6 +19,8 @@ public class Application {
         summationArrays(summationArraysFirst, summationArraysSecond, summationArraysThird);
         int[] revArr = {9, 8, 7, 6, 5, 4, 3, 2, 1};
         reverseArray(revArr);
+        int[] arrUpDown = {4, 3, 2, 1};
+        checkingUpDown(arrUpDown);
     }
 
     public static void printLine(int numberPrinting, String strPrint) {
@@ -71,29 +73,63 @@ public class Application {
         int a = summationArraysFirst.length;
         int b = summationArraysSecond.length;
         int c = summationArraysThird.length;
-        int d = Math.max(a,b);
-        int e = Math.max(c,d);
+        int d = Math.max(a, b);
+        int e = Math.max(c, d);
         int[] resultArray = new int[e];
         for (int i = 0; i < e; i++) {
-            if(i < a){
+            if (i < a) {
                 resultArray[i] += summationArraysFirst[i];
             }
-            if(i < b){
+            if (i < b) {
                 resultArray[i] += summationArraysSecond[i];
             }
-            if(i < c){
+            if (i < c) {
                 resultArray[i] += summationArraysThird[i];
             }
         }
         System.out.println(Arrays.toString(resultArray));
     }
 
-    public static void reverseArray(int[] arrRev)
-    {
+    public static void reverseArray(int[] arrRev) {
         int[] reverse = new int[arrRev.length];
         for (int i = 0; i < arrRev.length; i++) {
             reverse[i] = arrRev[arrRev.length - 1 - i];
         }
         System.out.println(Arrays.toString(reverse));
+    }
+
+    public static void checkingUpDown(int[] arrUpDown) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Выберите как проверить массив: В порядке возрастания(1), В порядке убывания(2)");
+        int number = scanner.nextInt();
+        boolean result = false;
+        if (number == 1) {
+            for (int i = 0; i < arrUpDown.length - 1; i++) {
+                if (arrUpDown[i] < arrUpDown[i + 1]) {
+                    result = true;
+                }
+            }
+            if (result) {
+                System.out.println("Массив идет в порядке возрастания");
+            } else {
+                System.out.println("Массив не идет в порядке возрастания");
+            }
+        }
+        if (number == 2) {
+            result = true;
+            for (int i = 0; i < arrUpDown.length - 1; i++) {
+                if (arrUpDown[i] > arrUpDown[i + 1]) {
+                    result = false;
+                }
+            }
+            if (!result) {
+                System.out.println("Массив идет в порядке убывания");
+            } else {
+                System.out.println("Массив не идет в порядке убывания");
+            }
+        }
+        if (number != 1 && number != 2) {
+            System.out.println("Выберите правильный вариант проверки");
+        }
     }
 }
