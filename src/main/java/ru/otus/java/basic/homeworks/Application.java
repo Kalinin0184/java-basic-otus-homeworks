@@ -11,6 +11,7 @@ public class Application {
         fillArr(4, arrayFill);
         int[] arrayIncrease = {5,1,34,67,24,5625,11};
         increaseArr(3, arrayIncrease);
+        weighingArr(new int[] {10, 15, 20, 25, 30, 35, 40, 45});
     }
 
     public static void printLine(int numberPrinting, String strPrint)
@@ -43,5 +44,28 @@ public class Application {
             arrayIncrease[i] += incNumber;
         }
         System.out.println(Arrays.toString(arrayIncrease));
+    }
+
+    public static void weighingArr(int[] arrWeighing)
+    {
+        int sumA = 0, sumB = 0;
+        int variableHalfNumber = arrWeighing.length / 2;
+        for (int i = 0; i < arrWeighing.length; i++) {
+            if (i < variableHalfNumber)
+            {
+                sumA += arrWeighing[i];
+            }
+            else {
+                sumB += arrWeighing[i];
+            }
+        }
+        if (sumA > sumB)
+        {
+            System.out.println("Первая половина массива больше!");
+        }
+        else {
+            System.out.println("Вторая половина массива больше!");
+        }
+
     }
 }
