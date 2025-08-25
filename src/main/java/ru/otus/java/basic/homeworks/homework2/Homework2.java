@@ -21,6 +21,8 @@ public class Homework2 {
         reverseArray(revArr);
         int[] arrUpDown = {4, 3, 2, 1};
         checkingUpDown(arrUpDown);
+        int[] arrCheck = {1, 1, 1, 1, 1, 5};
+        checkHalfArr(arrCheck);
     }
 
     public static void printLine(int numberPrinting, String strPrint) {
@@ -130,6 +132,22 @@ public class Homework2 {
         }
         if (number != 1 && number != 2) {
             System.out.println("Выберите правильный вариант проверки");
+        }
+    }
+
+    public static void checkHalfArr(int... arrCheck) {
+        int sumA = 0, sumB = Arrays.stream(arrCheck).sum();
+        for (int a : arrCheck) {
+            if (sumA == sumB) {
+                System.out.println("В массиве есть точка, в которой сумма левой и правой части равны");
+                break;
+            }
+            sumA += a;
+            sumB -= a;
+        }
+        if (sumA != sumB)
+        {
+            System.out.println("В массиве нету точки, в которой сумма левой и правой части равны");
         }
     }
 }
