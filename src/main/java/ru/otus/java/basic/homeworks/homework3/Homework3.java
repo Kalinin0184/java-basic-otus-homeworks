@@ -1,7 +1,5 @@
 package ru.otus.java.basic.homeworks.homework3;
 
-import java.util.Arrays;
-
 public class Homework3 {
     public static void main(String[] args) {
         int[][] array = {{-1, -2, -3}, {1, 1, 1}, {3, 3, 3}};
@@ -11,14 +9,16 @@ public class Homework3 {
         zeroingArray(arrayZero);
         int[][] arrayFind = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
         findMax(arrayFind);
+        int[][] arraySumSecondString = {{1, 1, 1}, {2, 2, 2}, {3, 3, 3}};
+        System.out.println(sumOfElementsSecondStringArray(arraySumSecondString));
     }
 
     public static void sumOfPositiveElements(int[][] array) {
         int sum = 0;
-        for (int i = 0; i < array.length; i++) {
+        for (int[] ints : array) {
             for (int j = 0; j < array.length; j++) {
-                if (array[i][j] > 0) {
-                    sum += array[i][j];
+                if (ints[j] > 0) {
+                    sum += ints[j];
                 }
             }
         }
@@ -46,13 +46,25 @@ public class Homework3 {
 
     public static void findMax(int[][] arrayFind) {
         int maxFind = 0;
-        for (int i = 0; i < arrayFind.length; i++) {
+        for (int[] ints : arrayFind) {
             for (int j = 0; j < arrayFind.length; j++) {
-                if (arrayFind[i][j] > maxFind) {
-                    maxFind = arrayFind[i][j];
+                if (ints[j] > maxFind) {
+                    maxFind = ints[j];
                 }
             }
         }
         System.out.println(maxFind);
+    }
+
+    public static int sumOfElementsSecondStringArray(int[][] arraySumSecondString) {
+        int sumElementsSecondStringArray = 0;
+        if (arraySumSecondString.length > 1) {
+            for (int i = 0; i < arraySumSecondString.length; i++) {
+                sumElementsSecondStringArray += arraySumSecondString[1][i];
+            }
+            return sumElementsSecondStringArray;
+        } else {
+            return -1;
+        }
     }
 }
