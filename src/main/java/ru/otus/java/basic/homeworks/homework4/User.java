@@ -14,4 +14,10 @@ public class User {
         this.birthday = birthday;
         this.email = email;
     }
+
+    public void info() {
+        System.out.println("ФИО: " + surname + " " + name + " " + patronymic);
+        System.out.println("Год рождения: " + birthday);
+        System.out.println("email: " + email);
+    }
 }
