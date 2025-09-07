@@ -16,9 +16,22 @@ public class Homework4 {
 
         for (int i = 0; i < usersArray.length; i++) {
             if (java.time.LocalDate.now().getYear() - usersArray[i].getBirthday() > 40){
-                usersArray[i].info();
+                usersArray[i].printInfo();
             }
         }
+
+        Box box1 = new Box("Black", 150, 150, 50);
+        box1.printInfo();
+
+        box1.setColor("White");
+
+        box1.printInfo();
+
+        box1.open();
+        box1.putItem("Шарик");
+        box1.putItem("Гвозди");
+        box1.removeItem();
+        box1.removeItem();
 
     }
 }

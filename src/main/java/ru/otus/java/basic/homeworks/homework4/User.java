@@ -55,7 +55,7 @@ public class User {
         this.email = email;
     }
 
-    public void info() {
+    public void printInfo() {
         System.out.println("ФИО: " + surname + " " + name + " " + patronymic);
         System.out.println("Год рождения: " + birthday);
         System.out.println("e-mail: " + email);
