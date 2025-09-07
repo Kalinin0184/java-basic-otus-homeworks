@@ -7,7 +7,7 @@ public class Homework3 {
         drawSquare(6);
         int[][] arrayZero = {{3, 4, 5}, {1, 6, 7}, {4, 4, 4}};
         zeroingArray(arrayZero);
-        int[][] arrayFind = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        int[][] arrayFind = {{5, -2, -3}, {-4, -5, -6}, {-7, -8, -9}};
         findMax(arrayFind);
         int[][] arraySumSecondString = {{1, 1, 1}, {2, 2, 2}, {3, 3, 3}};
         System.out.println(sumOfElementsSecondStringArray(arraySumSecondString));
@@ -45,7 +45,7 @@ public class Homework3 {
     }
 
     public static void findMax(int[][] arrayFind) {
-        int maxFind = 0;
+        int maxFind = Integer.MIN_VALUE;
         for (int[] ints : arrayFind) {
             for (int j = 0; j < arrayFind.length; j++) {
                 if (ints[j] > maxFind) {
@@ -57,14 +57,13 @@ public class Homework3 {
     }
 
     public static int sumOfElementsSecondStringArray(int[][] arraySumSecondString) {
-        int sumElementsSecondStringArray = 0;
-        if (arraySumSecondString.length > 1) {
-            for (int i = 0; i < arraySumSecondString.length; i++) {
-                sumElementsSecondStringArray += arraySumSecondString[1][i];
-            }
-            return sumElementsSecondStringArray;
-        } else {
+        if (arraySumSecondString.length < 2) {
             return -1;
         }
+        int sum = 0;
+        for (int i = 0; i < arraySumSecondString.length; i++) {
+            sum += arraySumSecondString[1][i];
+        }
+        return sum;
     }
 }
