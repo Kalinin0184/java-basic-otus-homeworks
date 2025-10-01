@@ -1,8 +1,8 @@
 package ru.otus.java.basic.homeworks;
 
 public class Plates {
-    int maxAmountFood;
-    int currentAmountFood;
+    private int maxAmountFood;
+    private int currentAmountFood;
 
     public Plates(int maxAmountFood) {
         this.maxAmountFood = maxAmountFood;
@@ -23,5 +23,27 @@ public class Plates {
 
     public void setMaxAmountFood(int maxAmountFood) {
         this.maxAmountFood = maxAmountFood;
+    }
+
+    public void addFood(int amountFood) {
+        if (currentAmountFood < maxAmountFood) {
+            if ((currentAmountFood + amountFood) <= maxAmountFood) {
+                currentAmountFood += amountFood;
+                System.out.println("В тарелку успешно добавлено " + amountFood + " еды");
+            } else {
+                System.out.println("В тарелке не хватит места");
+            }
+        } else {
+            System.out.println("Тарелка заполнена");
+        }
+    }
+
+    public boolean reduceFood(int foodAmount) {
+        if ((currentAmountFood - foodAmount) >= 0) {
+            currentAmountFood -= foodAmount;
+            return true;
+        } else {
+            return false;
+        }
     }
 }
