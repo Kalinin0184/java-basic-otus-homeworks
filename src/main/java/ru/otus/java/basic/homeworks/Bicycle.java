@@ -1,18 +1,39 @@
 package ru.otus.java.basic.homeworks;
 
-public class Bicycle extends Vehicle{
+public class Bicycle extends GeneralTransport {
+    private int endurance;
+    private final int MAX_DIST = 15;
+
+    public int getPetrol() {
+        return endurance;
+    }
+
+    public void setPetrol(int endurance) {
+        this.endurance = endurance;
+    }
+
     public Bicycle() {
-        this.setVehicleName("Велосипед");
+        super(TransportType.BICYCLE);
+        this.endurance = 3;
     }
 
     @Override
-    public boolean move(TerrainType terrainType, int distance){
-        if (terrainType != TerrainType.swamp) {
-            return super.move(terrainType, distance);
-        }
-        else {
-            System.out.println("По местности: " + terrainType.getTerrainName() + " " + getVehicleName() + " не проедет");
+    public boolean canMove(TerrainType terrainType) {
+        return terrainType != TerrainType.swamp;
+    }
+
+    @Override
+    public boolean move(int distant, TerrainType terrainType) {
+        if (!canMove(terrainType)) {
+            System.out.println("Велосипед не может двигаться по местности " + terrainType.getTerrainName());
             return false;
         }
+        if (distant > MAX_DIST || endurance < distant) {
+            System.out.println("Не может передвигаться! Слишком большое расстояние или закончились силы.");
+            return false;
+        }
+        endurance -= distant;
+        System.out.println("Велосипед проехал по местности" + terrainType.getTerrainName() + " " + distant + " км. Сил осталось: " + endurance);
+        return true;
     }
 }

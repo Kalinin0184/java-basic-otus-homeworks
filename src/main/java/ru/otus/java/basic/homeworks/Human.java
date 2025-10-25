@@ -1,27 +1,66 @@
 package ru.otus.java.basic.homeworks;
+import ru.otus.java.basic.homeworks.Transport;
 
 public class Human {
     private String name;
-    private String currentTransport;
+    private Transport currentTransport;
+    private int enduranceHum;
 
-    public Human(String name) {
+    public String getName() {
+        return name;
+    }
+
+    public Transport getCurrentTransport() {
+        return currentTransport;
+    }
+
+    public int getEnduranceHum() {
+        return enduranceHum;
+    }
+
+    public void setEnduranceHum(int enduranceHum) {
+        this.enduranceHum = enduranceHum;
+    }
+
+    public Human(String name, int enduranceHum) {
         this.name = name;
-    }
-    public void takeVehicle(Vehicle vehicle) {
-        currentTransport = vehicle.getVehicleName();
-        System.out.println("Человек пересел на транспорт " + currentTransport);
+        this.currentTransport = null;
+        this.enduranceHum = enduranceHum;
     }
 
-    public void leaveVehicle(Vehicle vehicle) {
-        System.out.println("Человек встал с транспорта " + currentTransport);
+    public void sitDownHum(Transport transport, Human human) {
+        if (currentTransport != null) {
+            System.out.println(name + " уже использует транспорт.");
+            return;
+        }
+        currentTransport = transport;
+        currentTransport.sitDown(human);
+    }
+
+    public void standUpHum(Transport transport, Human human) {
+        if (currentTransport == null) {
+            System.out.println(name + " не использует транспорт сейчас.");
+            return;
+        }
+        currentTransport.standUp(human);
         currentTransport = null;
     }
 
-    public void moveOnVehicle(Vehicle vehicle, TerrainType terrainType, int distance) {
+    public boolean move(int distance, TerrainType terrainType) {
         if (currentTransport != null) {
-            vehicle.move(terrainType, distance);
+            return currentTransport.move(distance, terrainType);
         } else {
-            System.out.println("Человек пошел пешком преодолевать расстояние " + distance + " метров" );
+            return moveOnFoot(distance, terrainType);
         }
+    }
+
+    public boolean moveOnFoot(int distance, TerrainType terrainType) {
+        if (enduranceHum < distance) {
+            System.out.println(name + " устал и не может пройти расстояние.");
+            return false;
+        }
+        enduranceHum -= distance;
+        System.out.println(name + " прошёл местность " + terrainType.getTerrainName() + " " + distance + " км. Осталось сил: " + enduranceHum);
+        return true;
     }
 }

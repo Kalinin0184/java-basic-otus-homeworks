@@ -1,27 +1,39 @@
 package ru.otus.java.basic.homeworks;
 
-public class Horse extends Vehicle {
-    private int strengthCount;
-    private int strengthConsumption;
+public class Horse extends GeneralTransport {
+    private int endurance;
+    private final int MAX_DIST = 20;
 
-    public Horse(int strengthCount, int strengthConsumption) {
-        this.setVehicleName("Лошадь");
-        this.strengthCount = strengthCount;
-        this.strengthConsumption = strengthConsumption;
+    public int getPetrol() {
+        return endurance;
+    }
+
+    public void setPetrol(int endurance) {
+        this.endurance = endurance;
+    }
+
+    public Horse() {
+        super(TransportType.HORSE);
+        this.endurance = 20;
     }
 
     @Override
-    public boolean move(TerrainType terrainType, int distance) {
-        if (terrainType.equals(TerrainType.swamp)) {
-            System.out.println("По местности " + terrainType.getTerrainName() + " " + getVehicleName() + " не проедет");
+    public boolean canMove(TerrainType terrainType) {
+        return terrainType != TerrainType.swamp;
+    }
+
+    @Override
+    public boolean move(int distant, TerrainType terrainType) {
+        if (!canMove(terrainType)) {
+            System.out.println("Лошадь не может двигаться по местности " + terrainType.getTerrainName());
             return false;
         }
-        strengthCount -= strengthConsumption * distance;
-        if (strengthCount >= 0) {
-            return super.move(terrainType, distance);
-        } else {
-            System.out.println("Транспорту " + getVehicleName() + " не хватает сил на прохождение расстояния " + distance);
+        if (distant > MAX_DIST || endurance < distant) {
+            System.out.println("Не может передвигаться! Слишком большое расстояние или закончились силы.");
             return false;
         }
+        endurance -= distant;
+        System.out.println("Лошадь проскакала по местности " + terrainType.getTerrainName() + " " + distant + " км. Сил осталось: " + endurance);
+        return true;
     }
 }
