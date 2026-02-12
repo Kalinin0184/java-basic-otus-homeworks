@@ -5,29 +5,51 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
     private int port;
 
     private List<ClientHandler> clients;
 
+    // Пул потоков для обработки подключений клиентов
+    private ExecutorService clientHandlingPool;
+
     public Server(int port) {
         this.port = port;
         clients = new CopyOnWriteArrayList<>();
+        // Ограниченный пул потоков, чтобы сервер мог обрабатывать несколько клиентов одновременно
+        clientHandlingPool = Executors.newFixedThreadPool(10);
     }
 
     public void start(){
         DatabaseService.getInstance();
         System.out.println("База данных инициализирована");
-        
+
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Сервер запустился на порту: " + port);
             while (true){
                 Socket socket = serverSocket.accept();
-                new ClientHandler(socket, this);
+                try {
+                    ClientHandler handler = new ClientHandler(socket, this);
+                    // Передаём обработку клиента в отдельный поток из пула
+                    clientHandlingPool.submit(handler);
+                } catch (IOException e) {
+                    System.out.println("Ошибка при обработке подключения клиента: " + e.getMessage());
+                    try {
+                        socket.close();
+                    } catch (IOException ex) {
+                        // игнорируем вторичную ошибку закрытия
+                    }
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            if (clientHandlingPool != null && !clientHandlingPool.isShutdown()) {
+                clientHandlingPool.shutdown();
+            }
         }
     }
 
@@ -79,7 +101,7 @@ public class Server {
     public void kickUser(String adminUsername, String targetUsername) {
         boolean targetFound = false;
         ClientHandler targetHandler = null;
-        
+
         ClientHandler adminHandler = null;
         for (ClientHandler c : clients) {
             if (c.getUsername().equals(adminUsername)) {
@@ -90,7 +112,7 @@ public class Server {
                 targetFound = true;
             }
         }
-        
+
         if (adminHandler != null) {
             if (targetFound && targetHandler != null) {
                 targetHandler.sendMsg("[Система]: Вы были отключены администратором " + adminUsername);

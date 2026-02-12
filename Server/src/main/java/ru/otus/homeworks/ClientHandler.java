@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class ClientHandler {
+public class ClientHandler implements Runnable {
     private Socket socket;
     private Server server;
     private DataInputStream in;
@@ -25,94 +25,95 @@ public class ClientHandler {
         this.role = UserRole.USER;
         this.authenticated = false;
         this.databaseService = DatabaseService.getInstance();
+    }
 
-        new Thread(() -> {
-            System.out.println("Клиент подключился " + socket.getPort());
-            sendMsg("Добро пожаловать! Для входа используйте: /login <username> <password>");
-            sendMsg("Для регистрации используйте: /register <username> <password>");
-            try {
-                while (true) {
-                    String message = in.readUTF();
-                    
-                    if (!authenticated) {
-                        if (message.startsWith("/login ")) {
-                            String[] tokens = message.split(" ", 3);
-                            if (tokens.length >= 3) {
-                                String loginUsername = tokens[1];
-                                String password = tokens[2];
-                                if (databaseService.authenticateUser(loginUsername, password)) {
-                                    this.username = loginUsername;
-                                    this.role = databaseService.getUserRole(loginUsername);
-                                    this.authenticated = true;
-                                    server.subscribe(this);
-                                    sendMsg("/authok");
-                                    sendMsg("Вы успешно вошли как " + username + " (роль: " + role + ")");
-                                    server.broadcastMessage("[Система]: " + username + " присоединился к чату");
-                                } else {
-                                    sendMsg("[Ошибка]: Неверное имя пользователя или пароль");
-                                }
+    @Override
+    public void run() {
+        System.out.println("Клиент подключился " + socket.getPort());
+        sendMsg("Добро пожаловать! Для входа используйте: /login <username> <password>");
+        sendMsg("Для регистрации используйте: /register <username> <password>");
+        try {
+            while (true) {
+                String message = in.readUTF();
+
+                if (!authenticated) {
+                    if (message.startsWith("/login ")) {
+                        String[] tokens = message.split(" ", 3);
+                        if (tokens.length >= 3) {
+                            String loginUsername = tokens[1];
+                            String password = tokens[2];
+                            if (databaseService.authenticateUser(loginUsername, password)) {
+                                this.username = loginUsername;
+                                this.role = databaseService.getUserRole(loginUsername);
+                                this.authenticated = true;
+                                server.subscribe(this);
+                                sendMsg("/authok");
+                                sendMsg("Вы успешно вошли как " + username + " (роль: " + role + ")");
+                                server.broadcastMessage("[Система]: " + username + " присоединился к чату");
                             } else {
-                                sendMsg("[Ошибка]: Неверный формат команды. Используйте: /login <username> <password>");
+                                sendMsg("[Ошибка]: Неверное имя пользователя или пароль");
                             }
-                        } else if (message.startsWith("/register ")) {
-                            String[] tokens = message.split(" ", 3);
-                            if (tokens.length >= 3) {
-                                String registerUsername = tokens[1];
-                                String password = tokens[2];
-                                if (databaseService.registerUser(registerUsername, password)) {
-                                    sendMsg("[Успех]: Пользователь " + registerUsername + " успешно зарегистрирован. Войдите используя /login");
-                                } else {
-                                    sendMsg("[Ошибка]: Пользователь с таким именем уже существует");
-                                }
+                        } else {
+                            sendMsg("[Ошибка]: Неверный формат команды. Используйте: /login <username> <password>");
+                        }
+                    } else if (message.startsWith("/register ")) {
+                        String[] tokens = message.split(" ", 3);
+                        if (tokens.length >= 3) {
+                            String registerUsername = tokens[1];
+                            String password = tokens[2];
+                            if (databaseService.registerUser(registerUsername, password)) {
+                                sendMsg("[Успех]: Пользователь " + registerUsername + " успешно зарегистрирован. Войдите используя /login");
                             } else {
-                                sendMsg("[Ошибка]: Неверный формат команды. Используйте: /register <username> <password>");
+                                sendMsg("[Ошибка]: Пользователь с таким именем уже существует");
                             }
-                        } else if (message.startsWith("/exit")) {
+                        } else {
+                            sendMsg("[Ошибка]: Неверный формат команды. Используйте: /register <username> <password>");
+                        }
+                    } else if (message.startsWith("/exit")) {
+                        sendMsg("/exitok");
+                        break;
+                    } else {
+                        sendMsg("[Ошибка]: Вы не авторизованы. Используйте /login или /register");
+                    }
+                } else {
+                    if (message.startsWith("/")) {
+                        if (message.startsWith("/exit")) {
                             sendMsg("/exitok");
                             break;
-                        } else {
-                            sendMsg("[Ошибка]: Вы не авторизованы. Используйте /login или /register");
+                        }
+                        if (message.startsWith("/w ")) {
+                            String[] tokens = message.split(" ", 3);
+                            if (tokens.length >= 3) {
+                                String recipient = tokens[1];
+                                String privateMessage = tokens[2];
+                                server.sendPrivateMessage(username, recipient, privateMessage);
+                            } else {
+                                sendMsg("[Ошибка]: Неверный формат команды. Используйте: /w <ник> <сообщение>");
+                            }
+                        }
+                        if (message.startsWith("/kick ")) {
+                            if (role == UserRole.ADMIN) {
+                                String[] tokens = message.split(" ", 2);
+                                if (tokens.length >= 2) {
+                                    String targetUsername = tokens[1];
+                                    server.kickUser(username, targetUsername);
+                                } else {
+                                    sendMsg("[Ошибка]: Неверный формат команды. Используйте: /kick <ник>");
+                                }
+                            } else {
+                                sendMsg("[Ошибка]: У вас нет прав для выполнения этой команды. Только ADMIN может использовать /kick");
+                            }
                         }
                     } else {
-                        if (message.startsWith("/")) {
-                            if (message.startsWith("/exit")) {
-                                sendMsg("/exitok");
-                                break;
-                            }
-                            if (message.startsWith("/w ")) {
-                                String[] tokens = message.split(" ", 3);
-                                if (tokens.length >= 3) {
-                                    String recipient = tokens[1];
-                                    String privateMessage = tokens[2];
-                                    server.sendPrivateMessage(username, recipient, privateMessage);
-                                } else {
-                                    sendMsg("[Ошибка]: Неверный формат команды. Используйте: /w <ник> <сообщение>");
-                                }
-                            }
-                            if (message.startsWith("/kick ")) {
-                                if (role == UserRole.ADMIN) {
-                                    String[] tokens = message.split(" ", 2);
-                                    if (tokens.length >= 2) {
-                                        String targetUsername = tokens[1];
-                                        server.kickUser(username, targetUsername);
-                                    } else {
-                                        sendMsg("[Ошибка]: Неверный формат команды. Используйте: /kick <ник>");
-                                    }
-                                } else {
-                                    sendMsg("[Ошибка]: У вас нет прав для выполнения этой команды. Только ADMIN может использовать /kick");
-                                }
-                            }
-                        } else {
-                            server.broadcastMessage(username + ": " + message);
-                        }
+                        server.broadcastMessage(username + ": " + message);
                     }
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } finally {
-                disconnect();
             }
-        }).start();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            disconnect();
+        }
     }
 
     public void sendMsg(String message) {
