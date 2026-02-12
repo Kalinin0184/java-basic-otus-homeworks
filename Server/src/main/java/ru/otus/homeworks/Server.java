@@ -13,13 +13,11 @@ public class Server {
 
     private List<ClientHandler> clients;
 
-    // Пул потоков для обработки подключений клиентов
     private ExecutorService clientHandlingPool;
 
     public Server(int port) {
         this.port = port;
         clients = new CopyOnWriteArrayList<>();
-        // Ограниченный пул потоков, чтобы сервер мог обрабатывать несколько клиентов одновременно
         clientHandlingPool = Executors.newFixedThreadPool(10);
     }
 
@@ -33,14 +31,12 @@ public class Server {
                 Socket socket = serverSocket.accept();
                 try {
                     ClientHandler handler = new ClientHandler(socket, this);
-                    // Передаём обработку клиента в отдельный поток из пула
                     clientHandlingPool.submit(handler);
                 } catch (IOException e) {
                     System.out.println("Ошибка при обработке подключения клиента: " + e.getMessage());
                     try {
                         socket.close();
                     } catch (IOException ex) {
-                        // игнорируем вторичную ошибку закрытия
                     }
                 }
             }
